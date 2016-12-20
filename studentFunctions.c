@@ -107,15 +107,34 @@ Image temp;
 	printf("\n Value: %d", resize->height);
 	getchar();
 	*/
+	Image woho;
+	int temp;
+	woho.height = resize->width;
+	woho.width = resize->height;
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * resize->width);
 	for (int i = 0; i < resize->width; i++)
 	{
 		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * resize->height);
+		for (int j = 0; j < resize->height; j++)
+		{
+			localMatrix[i][j].r = resize->pixels[j][i].r;
+			localMatrix[i][j].g = resize->pixels[j][i].g;
+			localMatrix[i][j].b = resize->pixels[j][i].b;
+		}
 	}
- printf("hue");
-	printf("asd");
-	free (resize);
+	printf("%d-%d-%d", resize->pixels[0][0].g, resize->pixels[0][0].r, resize->pixels[0][0].b);
+	getchar();
+	for (int i = 0; i < resize->height; i++)
+	{
+		free(resize->pixels[i]);
+	}
+	free(resize->pixels);
+	temp = resize->height;
+	resize->height = resize->width;
+	resize->width = temp;
 	resize->pixels = localMatrix;
+	getchar();
+	writeImage("hue.png", resize);
 	for (int i = 0; i < resize->width; i++)
 		free(localMatrix[i]);
 	free (localMatrix);

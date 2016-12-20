@@ -9,9 +9,9 @@ int main ()
 	int menuOption = 0;
 	char fileName[MAXSIZE];
 	Image plain;
-	Image new;
-	new.height = 512;
-	new.width = 1024;
+	//Image new;
+	/*new.height = 512;
+	/new.width = 1024;
 	plain.height = 512;
 	plain.width = 1024;
 	new.pixels = (Pixel**) malloc(sizeof(Pixel*) * new.height);
@@ -51,6 +51,33 @@ int main ()
 	printf("%d\n", counter1);
 	printf("%d\n", counter2);
 	printf("%d", counter3);
+	getchar();*/
+	readImage("test.png", &plain);
+	printf("%d-%d", plain.height, plain.width);
+
+
+	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * 1024);
+	for(int i = 0; i < 1024; i++)
+	{
+	localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * 512);
+	for (int j = 0; j < 512; j++)
+	{
+		localMatrix[i][j].r = 255;
+		localMatrix[i][j].g = 0;
+		localMatrix[i][j].b = 0;
+	}
+	}
+	for (int i = 0; i < plain.height; i++)
+	{
+		free (plain.pixels[i]);
+	}
+	free(plain.pixels);
+	plain.height = 1024;
+	plain.width = 512;
+	plain.pixels = localMatrix;
+
+	writeImage("hueheu.png", &plain);
+
 	getchar();
 	while (runProgram)
 	{
