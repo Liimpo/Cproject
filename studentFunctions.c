@@ -112,7 +112,7 @@ Image temp;
 	{
 		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * resize->height);
 	}
-
+ printf("hue");
 	printf("asd");
 	free (resize);
 	resize->pixels = localMatrix;
