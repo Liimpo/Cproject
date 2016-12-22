@@ -18,8 +18,11 @@ void removeWhitespace(char arr[]);
 
 void createExtension(char arr[]);
 
-void trumpster (Image *resize);
+void trumpster(Image *resize);
 
+void plumbus(Image *zoom);
+
+void abradolfLincler(Image *resize);
 //void turnAround(Image *turn);
 
 #endif

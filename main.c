@@ -82,7 +82,6 @@ int main ()
 	while (runProgram)
 	{
 		system("clear");
-
 		printf("*********************************************");
 		printf("\n*  Welcome to the Hi-res picture fugup      *");
 		printf("\n*********************************************");
@@ -115,9 +114,21 @@ int main ()
 		case 3:
 			skankHunt(plain);
 			break;
+		
+		case 4:
+			dildoSwaggins(plain);
+			break;
 
 		case 5:
 			trumpster(&plain);
+			break;
+
+		case 6:
+			abradolfLincler(&plain);
+			break;
+
+		case 7:
+			plumbus(&plain);
 			break;
 
 		case 8:
@@ -138,7 +149,6 @@ int main ()
 	//writeImage("test.png", &new);
 	printf("hue\n");
 	}
-
 	for (int i = 0; i < plain.height; i++)
 		free(plain.pixels[i]);
 	free(plain.pixels);

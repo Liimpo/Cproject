@@ -1,8 +1,9 @@
 #include "studentFunctions.h"
 
-//void turnAround(Image turn)
-//{
-//}
+void plumbus(Image *zoom)
+{
+
+}
 
 void removeWhitespace(char arr[])
 {
@@ -80,37 +81,7 @@ void skankHunt(Image invert)
 
 void trumpster(Image *resize)
 {
-/*	int tempWidth = resize->width * 2;
-	int tempHeight = resize->height * 2;
-
-Image temp;
-
-	temp.pixels = (Pixel**)malloc(sizeof(Pixel*) * tempHeight);
-	for (int i = 0; i < tempHeight; i++)
-	{
-		temp.pixels[i] = (Pixel*)malloc(sizeof(Pixel) * tempWidth);
-	}
-
-	for (int i = 0; i < resize->width; i++)
-	{
-		temp.pixels[i] = resize->pixels[i];
-	}
-	
-	for (int i = 0; i < resize->height; i++)
-		free(resize->pixels[i]);
-	free(resize->pixels);
-	resize->pixels = temp.pixels;
-	
-	resize->width = resize->width * 2;
-	resize->height = resize->height * 2;
-	printf("\n Value: %d", resize->width);
-	printf("\n Value: %d", resize->height);
-	getchar();
-	*/
-	Image woho;
 	int temp;
-	woho.height = resize->width;
-	woho.width = resize->height;
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * resize->width);
 	for (int i = 0; i < resize->width; i++)
 	{
@@ -122,20 +93,49 @@ Image temp;
 			localMatrix[i][j].b = resize->pixels[j][i].b;
 		}
 	}
-	printf("%d-%d-%d", resize->pixels[0][0].g, resize->pixels[0][0].r, resize->pixels[0][0].b);
-	getchar();
+
 	for (int i = 0; i < resize->height; i++)
-	{
 		free(resize->pixels[i]);
-	}
 	free(resize->pixels);
+
+
 	temp = resize->height;
 	resize->height = resize->width;
 	resize->width = temp;
 	resize->pixels = localMatrix;
+
+	printf("Your picture has now rotated!\n");
 	getchar();
-	writeImage("hue.png", resize);
-	for (int i = 0; i < resize->width; i++)
-		free(localMatrix[i]);
-	free (localMatrix);
+}
+
+void abradolfLincler(Image *resize)
+{
+	int tempEnlarger;
+	printf("Enter larger: ");
+	scanf("%d", &tempEnlarger);
+
+	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * (resize->height * tempEnlarger));
+	for (int i = 0; i < (resize->height * tempEnlarger); i++)
+	{
+		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * (resize->width * tempEnlarger));
+		for (int j = 0; j < (resize->width * tempEnlarger); j++)
+		{
+			localMatrix[i][j].r = resize->pixels[i/tempEnlarger][j/tempEnlarger].r;
+			localMatrix[i][j].g = resize->pixels[i/tempEnlarger][j/tempEnlarger].g;
+			localMatrix[i][j].b = resize->pixels[i/tempEnlarger][j/tempEnlarger].b;
+		}
+	}
+	
+	for (int i = 0; i < resize->height; i++)
+		free(resize->pixels[i]);
+	free(resize->pixels);
+
+	resize->height *= tempEnlarger;
+	resize->width *= tempEnlarger;
+
+	resize->pixels = localMatrix;
+
+	printf("Your picture has now been enlarged!\n");
+	getchar();
+
 }
