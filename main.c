@@ -9,76 +9,6 @@ int main ()
 	int menuOption = 0;
 	char fileName[MAXSIZE];
 	Image plain;
-	//Image new;
-	/*new.height = 512;
-	/new.width = 1024;
-	plain.height = 512;
-	plain.width = 1024;
-	new.pixels = (Pixel**) malloc(sizeof(Pixel*) * new.height);
-	for(int i = 0; i < new.height; i++)
-	{
-	new.pixels[i] = (Pixel*) malloc(sizeof(Pixel) * new.width);
-	}
-
-	int counter1 = 0, counter2 = 0, counter3 = 0;
-	plain.pixels = (Pixel**) malloc(sizeof(Pixel*) * plain.height);
-	for(int i = 0; i < plain.height; i++)
-	{
-		plain.pixels[i] = (Pixel*) malloc(sizeof(Pixel) * plain.width);
-		for(int j = 0; j < plain.width; j++)
-		{
-			plain.pixels[i][j].r = 255-(i/2);
-			plain.pixels[i][j].g = j/4;
-			plain.pixels[i][j].b = 0;
-			counter1++;
-		}
-		counter2++;
-	}
-	counter1 = (plain.height - 1);
-	for(int i = 0; i < plain.height; i++)
-	{
-		counter2 = (plain.width - 1);
-		for(int j = 0; j < plain.width; j++)
-		{
-			new.pixels[i][j].r = plain.pixels[counter1][counter2].r;
-			new.pixels[i][j].g = plain.pixels[counter1][counter2].g;
-			new.pixels[i][j].b = plain.pixels[counter1][counter2].b;
-			counter2--;
-			counter3++;
-		}
-		counter1--;
-	}
-	printf("%d\n", counter1);
-	printf("%d\n", counter2);
-	printf("%d", counter3);
-	getchar();*/
-	readImage("test.png", &plain);
-	printf("%d-%d", plain.height, plain.width);
-
-
-	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * 1024);
-	for(int i = 0; i < 1024; i++)
-	{
-	localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * 512);
-	for (int j = 0; j < 512; j++)
-	{
-		localMatrix[i][j].r = 255;
-		localMatrix[i][j].g = 0;
-		localMatrix[i][j].b = 0;
-	}
-	}
-	for (int i = 0; i < plain.height; i++)
-	{
-		free (plain.pixels[i]);
-	}
-	free(plain.pixels);
-	plain.height = 1024;
-	plain.width = 512;
-	plain.pixels = localMatrix;
-
-	writeImage("hueheu.png", &plain);
-
-	getchar();
 	while (runProgram)
 	{
 		system("clear");
@@ -145,9 +75,7 @@ int main ()
 		}
 
 
-	printf("Saving PNG\n");
 	//writeImage("test.png", &new);
-	printf("hue\n");
 	}
 	for (int i = 0; i < plain.height; i++)
 		free(plain.pixels[i]);
