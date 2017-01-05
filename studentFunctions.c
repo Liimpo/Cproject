@@ -1,62 +1,70 @@
 #include "studentFunctions.h"
 
-void findingVals(int validpos[][2], int pos, int maximumVal)
-{
-	int temp = maximumVal;
-	int diving = 2;
-	int tempHeight;
-	int options = 0;
-	int prime[MAXSIZE];
-	int primeCounter = 0;
-	int counter = 0;
-	int checker = FALSE;
-	int validCheck = 0;
+	/*
+	This function is used to find prime numbers for my zoom evaluating.
+	Since I want to resize my pictures to their original sizes I need
+	to find the lowest prime factors. I then multiply the prime factors.
+	Starting with the largest prime factors first to be able to return
+	zooming pixels that I am possible to resize to the original pic size
+	but also having some options. (I try to return 3 different values all
+	the time.)
+	*/
 
-	while (temp!=0)
+
+void findingVals(int validpos[][1], int pos, int maximumVal)
+{
+	int temp = maximumVal, dividing = 2, tempHeight, options = 0, prime[MAXSIZE], primeCounter = 0, validCheck = 0;
+
+	// Running this loop until temp is 1 because thats the lowest prime factor.
+	// The loop is done with the original width or size of the picture.
+	while (temp != 0)
 	{
-		if (temp % diving != 0)
-			diving = diving + 1;
+		if (temp % dividing != 0) //Checking if its evenly divided. If not divided is added by 1. Until it is dividable.
+			dividing = dividing + 1;
 		else
 		{
-			temp = temp / diving;
-			prime[primeCounter] = diving;
-			primeCounter++;
-			if (temp == 1)
+			temp = temp / dividing;
+			prime[primeCounter] = dividing; // I want to store the prime factors in an array.
+			primeCounter++; // Expanding the array with 1.
+			if (temp == 1) // Since the lowest val I can get is 1 I have to hardcode this.
 				temp = 0;
 		}
 	}
-	tempHeight = maximumVal - pos;
+
+	tempHeight = maximumVal - pos; //This is to know where my chosen spot is in the picture.
 	temp = 1;
-	// Check valid zooms.
-	while (!checker)
+
+	// Check valid zooms. Starting from the largest prime factor to the smallest.
+	// Thats why this for loop is starting at the maximum index of my array.
+	// loop is complete when all the prime factors have been evaluated.
+	for (int i = primeCounter - 1; i >= 0; i--)
 	{
-		for ( int i = primeCounter-1; i >= 0; i--)
-		{
-			temp *= prime[i];
-			if (temp < tempHeight)
-				validCheck++;
-			else if (temp >= tempHeight)
-				checker = TRUE;
-		}
+		temp *= prime[i];
+		// This if statement is here to give me a number of valid values on temp.
+		// If temp is larger than what is possible to zoom in the picture I should not
+		// accept that value in my further calculations.
+		if (temp < tempHeight)
+			validCheck++;
 	}
 
-	getchar();
-		temp = prime[0];
-	if (validCheck >= 3)
-		options = 0;
+	temp = prime[0]; // Setting temp to the smallest prime in my array.
 
-	for ( int i = primeCounter-1; i >= 0; i--)
+	// Starting at the largest number again. This is to see if all the primes in my array
+	// are the same. If the smallest are the same as the largest. All of the prime factors
+	// are the same.
+	for (int i = primeCounter - 1; i >= 0; i--)
 	{
 		if (temp == prime[i])
 		{
 			temp = prime[i];
-			counter++;
 		}
 		else
 			i = 0;
 	}
 
-	for ( int i = 0; i < primeCounter-1; i++)
+	// This is my sorting algoritm to sort my prime factors in my array because I want
+	// them in decreasing order. Doing it with bubblesort.
+	for (int i = 0; i < primeCounter - 1; i++)
 	{
 		for (int j = 0; j < primeCounter - i - 1; j++)
 		{
@@ -68,146 +76,178 @@ void findingVals(int validpos[][2], int pos, int maximumVal)
 			}
 		}
 	}
-	for (int i = 0; i < primeCounter; i++)
-	{
-		printf("%d\n", prime[i]);
-	}
-	while (options < 3) //(counter!= primeCounter))
+
+	/* This is the loop that is giving me the values I am going to return to my zoom func.
+		 Since I got 3 options I want it to be ran 3 times. This loop is multiplying prime
+		 factors to get the largest number possible. After each instance of this loop is ran
+		 options is added by one which is making the loop not considering the smallest prime
+		 factor thus giving me the largest available number out of my given prime factors.
+
+		 Because the for loop is evaluating against (validcheck-options) I will never get
+		 out of my bounds since I earlier is making sure the positions are inside my picture.
+	*/
+	while (options < 3)
 	{
 		temp = 1;
 		for (int i = 0; i < validCheck-options; i++)
 		{
 			temp *= prime[i];
-			printf("%d-", temp);
 		}
-		printf("%d\n", temp);
-		validpos[options][1] = temp;
+		// Storing my 3 largest zoomOptions in validpos.
+		validpos[options][0] = temp;
 		options++;
 	}
-	for (int i = 0; i < 3; i++)
-	{
-		printf("%d\n", validpos[i][1]);
-	}
-	getchar();
 }
-
-
 
 void plumbus(Image *zoom)
 {
-	int temp = 0;
-	int counter = 0;
-	int tempX, tempY;
-	int zoomOption = 0;
-  int optionPicker = FALSE;
-	//int zoomHeight, zoomWidth;
-	int Xchecker = FALSE;
-	int Ychecker = FALSE;
-	int zoomOptionsY[3][2], zoomOptionsX[3][2];
+	int Xenlarger = 1, Yenlarger = 1, temp = 0, counter = 0, tempX, tempY, zoomOption = -1;
+	int validXY, zoomTemp = 0, optionPicker = FALSE, Xchecker = FALSE, Ychecker = FALSE;
+	int zoomOptionsY[3][1], zoomOptionsX[3][1];
 
-	printf("Please specify the pixelposition where u want to start your zoom .\n");
+	printf("Please specify the pixelposition where u want to start your zoom.\n");
 	printf("You will get options how you can zoom your picture.\n");
 	printf("Your picture is %dx%d. Please enter a X and Y inside your pixel range.\n", zoom->width, zoom->height);
 
 	while (!optionPicker)
 	{
-	printf("Pixel X val: ");
-	scanf("%d", &tempX);
-	getchar();
-	printf("Pixel Y val: ");
-	scanf("%d", &tempY);
-	getchar();
-	findingVals( zoomOptionsY, tempY, zoom->height);
-	findingVals( zoomOptionsX, tempX, zoom->width);
-
-	// Checking if width or height is the largest. If height is big the new X val 
-	// should be larger than the Y val to keep the optimal zoom options. 
-	for (int i = 0; i < 3; i++)
-	{
-		if (zoom->width > zoom->height && zoomOptionsX[i][1] < zoomOptionsY[i][1])
+		validXY = FALSE;
+		while (!validXY)
 		{
-			temp = zoomOptionsX[i][1];
-			zoomOptionsX[i][1] = zoomOptionsY[i][1];
-			zoomOptionsY[i][1] = temp;
-		}
-	}
+			printf("Pixel X val: ");
+			scanf("%d", &tempX);
+			getchar();
 
-	// Checking if the width or height is inbetween the maximum range or not.
-	// If it is outside the range it should lower itself with the next val.
-	for (int i = 1; i < 3; i++)
-	{
-		if (tempX + zoomOptionsX[i-1][1] > zoom->width)
+			printf("Pixel Y val: ");
+			scanf("%d", &tempY);
+			getchar();
+			// This if-statements is making sure I input valid inputs inside the picture.
+			if (tempX < zoom->width && tempY < zoom->height)
+			{
+				validXY = TRUE;
+			}
+			else
+				printf("ERROR! Inputed X and Y is outside the picture\n");
+			if (validXY)
+			{
+				findingVals(zoomOptionsY, tempY, zoom->height);
+				findingVals(zoomOptionsX, tempX, zoom->width);
+			}
+		}
+
+		// Checking if width or height is the largest. If height is big the new X val 
+		// should be larger than the Y val to keep the optimal zoom options. 
+		for (int i = 0; i < 3; i++)
 		{
-			zoomOptionsX[i-1][1] = zoomOptionsX[i][1];
+			if (zoom->width > zoom->height && zoomOptionsX[i][0] < zoomOptionsY[i][0])
+			{
+				temp = zoomOptionsX[i][0];
+				zoomOptionsX[i][0] = zoomOptionsY[i][0];
+				zoomOptionsY[i][0] = temp;
+			}
 		}
-	}
-	printf("\n%d\n", counter);
-	printf("%d -- %d -- %d\n", zoomOptionsX[0][1], zoomOptionsX[0][1], zoomOptionsX[0][1]);
 
-	for (int i = 0; i < 2; i++)
-	{
-		if (zoom->width > zoom->height && zoomOptionsX[i][1] == zoomOptionsY[i][1])
+		// Checking if the width or height is inbetween the maximum range or not.
+		// If it is outside the range it should lower itself with the next val.
+		for (int i = 1; i < 3; i++)
 		{
-			zoomOptionsY[i][1] = zoomOptionsY[i+1][1];
-			counter++;
+			counter = i;
+			if (tempX + zoomOptionsX[counter-1][0] > zoom->width)
+			{
+				while (tempX + zoomOptionsX[i-1][0] > zoom->width)
+				{
+					zoomOptionsX[i-1][0] = zoomOptionsX[counter][0];
+					counter++;
+				}
+			}
 		}
-		if (zoom->height > zoom->width && zoomOptionsX[i][1] == zoomOptionsY[i][1])
+		/* This for loop is making sure I always get the right proportions. If its a picture
+			 that is more wider I am giving my current options Y-value the next one since I
+			 get the values in descending order. Once I've checked the width I check the height
+			 there I change my X-value instead to keep my proportions.
+		*/
+		for (int i = 0; i < 2; i++)
 		{
-			zoomOptionsX[i][1] = zoomOptionsX[i+1][1];
-			counter++;
+			if (zoom->width > zoom->height && zoomOptionsX[i][0] == zoomOptionsY[i][0])
+				zoomOptionsY[i][0] = zoomOptionsY[i+1][0];
+
+			if (zoom->height > zoom->width && zoomOptionsX[i][0] == zoomOptionsY[i][0])
+				zoomOptionsX[i][0] = zoomOptionsX[i+1][0];
 		}
-	}
-	printf("\n%d\n", counter);
-	// This is printing the options based on where u chosed to start
-	printf("If you want a proportional zooming. Your zooming options are\n");
-	printf("==========================\n");
-	for (int i = 0; i < 3; i++)
-	{
-		printf("%d. ", i+1);
-		printf("%dx%d\n", zoomOptionsX[i][1], zoomOptionsY[i][1]);
-		printf("========================\n");
-	}
-	scanf("%d" , &zoomOption);
-	zoomOption--;
-	optionPicker = TRUE;
 
-	if (zoomOptionsY[zoomOption][1] < 10 || zoomOptionsX[zoomOption][1] < 10)
-	{
-		printf("To get a better zoom please lower your X or Y val.\n");
-		optionPicker = FALSE;
-	}
-	printf("%d\n", zoomOptionsX[zoomOption][1]);
-	getchar();
+		// This is printing the options based on where u chosed to start
+		printf("If you want a proportional zooming. Your zooming options are\n");
+		printf("==========================\n");
+
+		for (int i = 0; i < 3; i++)
+		{
+			printf("%d. ", i+1);
+			printf("%dx%d\n", zoomOptionsX[i][0], zoomOptionsY[i][0]);
+			printf("========================\n");
+		}
+
+		// This while loop is ran to make sure the user doesnt input something outside 3.
+		do
+		{
+			scanf("%d" , &zoomOption);
+			getchar();
+			if (zoomOption < 1 || zoomOption > 3)
+				printf("Wrong value. Enter 1-3\n");
+			else
+			{
+				optionPicker = TRUE; //This is put to TRUE to not run the while loop again.
+				zoomOption--; // I lower with one because of how the indexing works.
+				printf("You are now going to zoom your picture at the position: %dx%d\n", tempX, tempY);
+				printf("You will zoom an area with the size of: %dx%d Pixels. Press a key to continue..", zoomOptionsX[zoomOption][0], zoomOptionsY[zoomOption][0]);
+			}
+		}while (zoomOption < 0 || zoomOption > 2); // I need to have the 0 and 2 here because I lower my zoomOption with 1.
+
+		// 20 pixels is the closest to a side you can go.
+		if (zoomOptionsY[zoomOption][0] < 20 || zoomOptionsX[zoomOption][0] < 20)
+		{
+			printf("To get a better zoom please lower your X or Y val. Press a key to continue\n");
+			optionPicker = FALSE;
+		}
+		getchar();
 	}
 
-	int zoomTemp = 0;
-	int Xenlarger = 1, Yenlarger = 1;
-	zoomTemp = zoomOptionsX[zoomOption][1];
+	/* This section of this function is creating the matrix based on my picked values
+		 It then enlargens it to get back to my starting size. Therefore I need to find
+		 values that I am going to multiply with my chosen zoom option.
+	*/
+	
+	// Since I want to check both my X and Y vals I use a temp for both of them callsed 
+	// zoomTemp. I start with the X enlarger.
+	zoomTemp = zoomOptionsX[zoomOption][0];
 	while (!Xchecker)
 	{
-		zoomTemp = zoomOptionsX[zoomOption][1] * Xenlarger;
-		if (zoomTemp != zoom->width)
+		zoomTemp = zoomOptionsX[zoomOption][0] * Xenlarger;
+		if (zoomTemp != zoom->width) //Running this until I reach my original width.
 		{
 			Xenlarger++;
-			printf("%d\n", zoomTemp);
-			getchar();
+
+			/* If it happens that I can't find any values to get back to the actual size
+				 I need to swap my values back to their originals. There is a posibility that
+				 I swapped these vals earlier in my code. I then need to swap it back. This
+				 is done here. I then set Xenlarger to 1 to restart my finder.
+			*/
 			if (zoomTemp > zoom->width)
 			{
-				printf("Yo");
-				temp = zoomOptionsY[0][1];
-				zoomOptionsY[0][1] = zoomOptionsX[0][1];
-				zoomOptionsX[0][1] = temp;
+				temp = zoomOptionsY[zoomOption][0];
+				zoomOptionsY[zoomOption][0] = zoomOptionsX[zoomOption][0];
+				zoomOptionsX[zoomOption][0] = temp;
 				Xenlarger = 1;
 			}
 		}
 		else
-			Xchecker = TRUE;
+			Xchecker = TRUE; // True to end my loop.
 	}
 
-	zoomTemp = zoomOptionsY[0][1];
+	// Now I do the same but to my Y instead.
+	zoomTemp = zoomOptionsY[zoomOption][0];
 	while (!Ychecker)
 	{
-		zoomTemp = zoomOptionsY[0][1] * Yenlarger;
+		zoomTemp = zoomOptionsY[zoomOption][0] * Yenlarger;
 		if (zoomTemp != zoom->height)
 		{
 			Yenlarger++;
@@ -215,14 +255,14 @@ void plumbus(Image *zoom)
 		else
 			Ychecker = TRUE;
 	}
-printf("%d\n%d\n", tempY, tempX);
-getchar();
-	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * zoomOptionsY[0][1]);
 
-	for (int i = 0; i < zoomOptionsY[0][1]; i++)
+	// Here I create my starting picture depending on the options the user picked.
+	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * zoomOptionsY[zoomOption][0]);
+
+	for (int i = 0; i < zoomOptionsY[zoomOption][0]; i++)
 	{
-		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * zoomOptionsX[0][1]);
-		for (int j = 0; j < zoomOptionsX[0][1]; j++)
+		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * zoomOptionsX[zoomOption][0]);
+		for (int j = 0; j < zoomOptionsX[zoomOption][0]; j++)
 		{
 			localMatrix[i][j].r = zoom->pixels[i+tempY][j+tempX].r;
 			localMatrix[i][j].g = zoom->pixels[i+tempY][j+tempX].g;
@@ -234,11 +274,12 @@ getchar();
 		free(zoom->pixels[i]);
 	free(zoom->pixels);
 
+	// Setting up the new vals in the Image struct.
 	zoom->pixels = localMatrix;
-	zoom->height = zoomOptionsY[0][1];
-	zoom->width = zoomOptionsX[0][1];
+	zoom->height = zoomOptionsY[zoomOption][0];
+	zoom->width = zoomOptionsX[zoomOption][0];
 
-
+	// This is resizing the matrix to get back to the starting size.
 	localMatrix = (Pixel**) malloc(sizeof(Pixel*) * zoom->height * Yenlarger);
 
 	for (int i = 0; i < zoom->height * Yenlarger; i++)
@@ -251,6 +292,7 @@ getchar();
 			localMatrix[i][j].b = zoom->pixels[i/Yenlarger][j/Xenlarger].b;
 		}
 	}
+
 	for (int i = 0; i < zoom->height; i++)
 		free(zoom->pixels[i]);
 	free(zoom->pixels);
@@ -278,6 +320,7 @@ void createExtension(char arr[])
 	while (!temp)
 	{
 		system("clear");
+		// This is 60 chars long because I add .png at the end of it.
 		printf("Please enter the name of your file you want to save. (max 60 char long.)\n");
 		fgets(arr, MAXSIZE, stdin);
 
@@ -293,7 +336,7 @@ void createExtension(char arr[])
 				temp = TRUE;
 				i = MAXSIZE;
 
-				printf("\nSaving PNG");
+				printf("Saving PNG");
 				getchar();
 			}
 		}
@@ -332,6 +375,10 @@ void skankHunt(Image invert)
 			invert.pixels[i][j].b = 255 - invert.pixels[i][j].b;
 		}
 	}
+
+	system("clear");
+	printf("The colors in your picture has now been inverted!");
+	getchar();
 }
 
 void trumpster(Image *resize)
@@ -392,10 +439,16 @@ void abradolfLincler(Image *resize)
 
 	resize->height *= tempEnlarger;
 	resize->width *= tempEnlarger;
-
 	resize->pixels = localMatrix;
 
 	printf("Your picture has now been enlarged!\n");
 	getchar();
 
+}
+
+void errorMessage()
+{
+	system("clear");
+	printf("ERROR! Nothing to manipulate.\nPlease load a picture before manipulating.");
+	getchar();
 }

@@ -5,6 +5,7 @@
 
 int main ()
 {
+	int fileIsLoaded = FALSE;
 	int runProgram = TRUE;
 	int menuOption = 0;
 	char fileName[MAXSIZE];
@@ -28,43 +29,76 @@ int main ()
 		getchar();
 		switch (menuOption)
 		{
+
+		/* This case will put you in the mode where you load a file into the program to manipulate
+			 The maximum of letters available in the loaded file is 64 letters long. After the user
+			 inputs the name of the file I remove the \n at the end of the input with my
+			 removeWhitespace function.
+		 */
 		case 1:
 			system("clear");
-			printf("Please enter the filename (Max 64 letters long) of your picture\n");
+			printf("Please enter the complete filename (Max 64 letters long) of your picture.\n");
 			fgets(fileName, MAXSIZE, stdin);
 			removeWhitespace(fileName);
 			readImage(fileName, &plain);
+			fileIsLoaded = TRUE;
 			break;
 
+		// The second case is used to save the file on your system. To make it easier to the user I
+		// make sure the file is saved as a .png by adding .png to the end of the input by the user.
 		case 2:
-			createExtension(fileName);
-			writeImage(fileName, &plain);
+			if (fileIsLoaded)
+			{
+				createExtension(fileName);
+				writeImage(fileName, &plain);
+			}
+			else
+			{
+				system("clear");
+				printf("ERROR! NO FILE TO SAVE.\nPlease load a picture before saving it.");
+				getchar();
+			}
 			break;
 
+		// The third case is used to invert the colors in your picture.
 		case 3:
-			skankHunt(plain);
+			if (fileIsLoaded)
+				skankHunt(plain);
+			else
+				errorMessage();
 			break;
 		
 		case 4:
-			dildoSwaggins(plain);
+			if (fileIsLoaded)
+				dildoSwaggins(plain);
+			else
+				errorMessage();
 			break;
 
 		case 5:
-			trumpster(&plain);
+			if (fileIsLoaded)
+				trumpster(&plain);
+			else
+				errorMessage();
 			break;
 
 		case 6:
-			abradolfLincler(&plain);
+			if (fileIsLoaded)
+				abradolfLincler(&plain);
+			else
+				errorMessage();
 			break;
 
 		case 7:
-			plumbus(&plain);
+			if (fileIsLoaded)
+				plumbus(&plain);
+			else
+				errorMessage();
 			break;
 
 		case 8:
 			system("clear");
-			printf("Now exiting...");
-			getchar();
+			printf("Now exiting...\n");
 			runProgram = FALSE;
 			break;
 
@@ -73,12 +107,13 @@ int main ()
 			getchar();
 			break;
 		}
-
-
-	//writeImage("test.png", &new);
 	}
-	for (int i = 0; i < plain.height; i++)
-		free(plain.pixels[i]);
-	free(plain.pixels);
-	return 0;
+
+	if (fileIsLoaded)
+	{
+		for (int i = 0; i < plain.height; i++)
+			free(plain.pixels[i]);
+		free(plain.pixels);
+		return 0;
+	}
 }

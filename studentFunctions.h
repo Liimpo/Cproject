@@ -22,9 +22,10 @@ void trumpster(Image *resize);
 
 void plumbus(Image *zoom);
 
-void findingVals(int validpos[][2], int pos, int maximumVal);
+void findingVals(int validpos[][1], int pos, int maximumVal);
 
 void abradolfLincler(Image *resize);
-//void turnAround(Image *turn);
+
+void errorMessage();
 
 #endif
