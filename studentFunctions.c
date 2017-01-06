@@ -55,9 +55,7 @@ void findingVals(int validpos[][1], int pos, int maximumVal)
 	for (int i = primeCounter - 1; i >= 0; i--)
 	{
 		if (temp == prime[i])
-		{
 			temp = prime[i];
-		}
 		else
 			i = 0;
 	}
@@ -123,11 +121,9 @@ void plumbus(Image *zoom)
 			getchar();
 			// This if-statements is making sure I input valid inputs inside the picture.
 			if (tempX < zoom->width && tempY < zoom->height)
-			{
 				validXY = TRUE;
-			}
 			else
-				printf("ERROR! Inputed X and Y is outside the picture\n");
+				printf("ERROR! Inputed X or Y is outside the picture\n");
 			if (validXY)
 			{
 				findingVals(zoomOptionsY, tempY, zoom->height);
@@ -228,8 +224,8 @@ void plumbus(Image *zoom)
 
 			/* If it happens that I can't find any values to get back to the actual size
 				 I need to swap my values back to their originals. There is a posibility that
-				 I swapped these vals earlier in my code. I then need to swap it back. This
-				 is done here. I then set Xenlarger to 1 to restart my finder.
+				 I swapped these vals earlier in my code. I then set Xenlarger to 1 to restart
+				 my finder.
 			*/
 			if (zoomTemp > zoom->width)
 			{
@@ -422,6 +418,7 @@ void abradolfLincler(Image *resize)
 		printf("Enter a multiplier to enlarge your picture. (Valid numbers integers between 1-15): ");
 		scanf("%d", &tempEnlarger);
 		getchar();
+
 		if (tempEnlarger >= 1 && tempEnlarger <= 15)
 			checkEnlarger = TRUE;
 	}
