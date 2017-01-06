@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include "studentFunctions.h"
 
 int main ()
@@ -67,7 +66,8 @@ int main ()
 			else
 				errorMessage();
 			break;
-		
+
+		// The fourth case is used to swap the colors
 		case 4:
 			if (fileIsLoaded)
 				dildoSwaggins(plain);
@@ -75,6 +75,7 @@ int main ()
 				errorMessage();
 			break;
 
+		// The fifth case is used to turn the picture 90-degrees
 		case 5:
 			if (fileIsLoaded)
 				trumpster(&plain);
@@ -82,6 +83,7 @@ int main ()
 				errorMessage();
 			break;
 
+		// The sixth case is used to enlarge
 		case 6:
 			if (fileIsLoaded)
 				abradolfLincler(&plain);
@@ -89,6 +91,7 @@ int main ()
 				errorMessage();
 			break;
 
+		// Seventh case is used to zoom the picture
 		case 7:
 			if (fileIsLoaded)
 				plumbus(&plain);
@@ -96,6 +99,7 @@ int main ()
 				errorMessage();
 			break;
 
+		// The last case is used to exit the program.
 		case 8:
 			system("clear");
 			printf("Now exiting...\n");
@@ -109,6 +113,8 @@ int main ()
 		}
 	}
 
+	// I need to run a if-statement here because if I dont load a file and exit the program from the
+	// menu I would free memory that is not allocated.
 	if (fileIsLoaded)
 	{
 		for (int i = 0; i < plain.height; i++)

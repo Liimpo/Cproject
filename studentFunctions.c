@@ -316,34 +316,24 @@ void removeWhitespace(char arr[])
 
 void createExtension(char arr[])
 {
-	int temp = FALSE;
-	while (!temp)
+	// This is 60 chars long because I add .png at the end of it.
+	// I want to add .png myself to make it easier for the user.
+	system("clear");
+	printf("Please enter the name of your file you want to save without the png extension. (max 60 char long.)\n");
+	fgets(arr, MAXSIZE, stdin);
+
+	for (int i = 0; i < (MAXSIZE-4); i++)
 	{
-		system("clear");
-		// This is 60 chars long because I add .png at the end of it.
-		printf("Please enter the name of your file you want to save. (max 60 char long.)\n");
-		fgets(arr, MAXSIZE, stdin);
-
-		for (int i = 0; i < (MAXSIZE-4); i++)
+		if (arr[i] == '\0')
 		{
-			if (arr[i] == '\0')
-			{
-				arr[i-1] = '.';
-				arr[i] = 'p';
-				arr[i+1] = 'n';
-				arr[i+2] = 'g';
-				arr[i+3] = '\0';
-				temp = TRUE;
-				i = MAXSIZE;
+			arr[i-1] = '.';
+			arr[i] = 'p';
+			arr[i+1] = 'n';
+			arr[i+2] = 'g';
+			arr[i+3] = '\0';
+			i = MAXSIZE;
 
-				printf("Saving PNG");
-				getchar();
-			}
-		}
-
-		if (!temp)
-		{
-			printf("\n You entered a name that's too long. Please use less characters.\n");
+			printf("Saving PNG. Press a key to continue.");
 			getchar();
 		}
 	}
@@ -356,12 +346,16 @@ void dildoSwaggins(Image swap)
 	{
 		for (int j = 0; j < swap.width; j++)
 		{
-			temp = swap.pixels[i][j].g;
-			swap.pixels[i][j].g = swap.pixels[i][j].r;
-			swap.pixels[i][j].r = swap.pixels[i][j].b;
-			swap.pixels[i][j].b = temp;
+			temp = swap.pixels[i][j].g; // Storing the green value in a temp variable.
+			swap.pixels[i][j].g = swap.pixels[i][j].r; // Replacing green with red.
+			swap.pixels[i][j].r = swap.pixels[i][j].b; // Replacing red with blue.
+			swap.pixels[i][j].b = temp; // Replacing blue with green.
 		}
 	}
+
+	system("clear");
+	printf("The colors of your picture have now been swapped.");
+	getchar();
 }
 
 void skankHunt(Image invert)
@@ -370,6 +364,8 @@ void skankHunt(Image invert)
 	{
 		for (int j = 0; j < invert.width; j++)
 		{
+			// To invert a color I just take the maximum RGB value and remove the current
+			// value from it.
 			invert.pixels[i][j].g = 255 - invert.pixels[i][j].g;
 			invert.pixels[i][j].r = 255 - invert.pixels[i][j].r;
 			invert.pixels[i][j].b = 255 - invert.pixels[i][j].b;
@@ -384,6 +380,13 @@ void skankHunt(Image invert)
 void trumpster(Image *resize)
 {
 	int temp;
+
+	/*
+	 * I am creating a local matrix here where I want my rows to be the original width
+	 * and the columns my original height. By doing so I rotate my picture 90-degrees.
+	 * To get every color in its right spot I take the maximum value of each rgb value
+	 * and lower them with my current j and i.
+	*/
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * resize->width);
 	for (int i = 0; i < resize->width; i++)
 	{
@@ -400,27 +403,37 @@ void trumpster(Image *resize)
 		free(resize->pixels[i]);
 	free(resize->pixels);
 
-
+	// Swapping the height with width.
 	temp = resize->height;
 	resize->height = resize->width;
 	resize->width = temp;
 	resize->pixels = localMatrix;
 
-	printf("Your picture has now rotated!\n");
+	system("clear");
+	printf("Your picture has now rotated!");
 	getchar();
 }
 
 void abradolfLincler(Image *resize)
 {
 	int tempEnlarger, checkEnlarger = FALSE;
-	while (!checkEnlarger)
+	while (!checkEnlarger) // I set the limit to enlarge a picture every instance to 15.
 	{
 		printf("Enter a multiplier to enlarge your picture. (Valid numbers integers between 1-15): ");
 		scanf("%d", &tempEnlarger);
+		getchar();
 		if (tempEnlarger >= 1 && tempEnlarger <= 15)
 			checkEnlarger = TRUE;
 	}
 
+	/*
+		I am once again creating a local matrix. Although this time It should keep it
+		original columns/rows but instead get bigger with a multiplier that the user
+		inputted. To be able to keep the correct color in the correct pixel I divide
+		in every position the current position with the value of my enlarger. Since the
+		mathematical operand division works as it does I get the same value depending on
+		my tempEnlarger variabel.
+	*/
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * (resize->height * tempEnlarger));
 	for (int i = 0; i < (resize->height * tempEnlarger); i++)
 	{
@@ -441,11 +454,12 @@ void abradolfLincler(Image *resize)
 	resize->width *= tempEnlarger;
 	resize->pixels = localMatrix;
 
-	printf("Your picture has now been enlarged!\n");
+	system("clear");
+	printf("Your picture has now been enlarged!");
 	getchar();
-
 }
 
+// If the user tries to manipulate a picture without loading anything. This gets printed
 void errorMessage()
 {
 	system("clear");
