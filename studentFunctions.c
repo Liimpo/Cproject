@@ -1,13 +1,13 @@
 #include "studentFunctions.h"
 
 	/*
-	This function is used to find prime numbers for my zoom evaluating.
-	Since I want to resize my pictures to their original sizes I need
-	to find the lowest prime factors. I then multiply the prime factors.
-	Starting with the largest prime factors first to be able to return
-	zooming pixels that I am possible to resize to the original pic size
-	but also having some options. (I try to return 3 different values all
-	the time.)
+		This function is used to find prime numbers for my zoom evaluating.
+		Since I want to resize my pictures to their original sizes I need
+		to find the lowest prime factors. I then multiply the prime factors.
+		Starting with the largest prime factors first to be able to return
+		zooming pixels that I am possible to resize to the original pic size
+		but also having some options. (I try to return 3 different values all
+		the time.)
 	*/
 
 
@@ -75,14 +75,15 @@ void findingVals(int validpos[][1], int pos, int maximumVal)
 		}
 	}
 
-	/* This is the loop that is giving me the values I am going to return to my zoom func.
-		 Since I got 3 options I want it to be ran 3 times. This loop is multiplying prime
-		 factors to get the largest number possible. After each instance of this loop is ran
-		 options is added by one which is making the loop not considering the smallest prime
-		 factor thus giving me the largest available number out of my given prime factors.
+	/* 
+		This is the loop that is giving me the values I am going to return to my zoom func.
+		Since I got 3 options I want it to be ran 3 times. This loop is multiplying prime
+		factors to get the largest number possible. After each instance of this loop is ran
+		options is added by one which is making the loop not considering the smallest prime
+		factor thus giving me the largest available number out of my given prime factors.
 
-		 Because the for loop is evaluating against (validcheck-options) I will never get
-		 out of my bounds since I earlier is making sure the positions are inside my picture.
+		Because the for loop is evaluating against (validcheck-options) I will never get
+		out of my bounds since I earlier is making sure the positions are inside my picture.
 	*/
 	while (options < 3)
 	{
@@ -97,7 +98,7 @@ void findingVals(int validpos[][1], int pos, int maximumVal)
 	}
 }
 
-void plumbus(Image *zoom)
+void picZoom(Image *zoom)
 {
 	int Xenlarger = 1, Yenlarger = 1, temp = 0, counter = 0, tempX, tempY, zoomOption = -1;
 	int validXY, zoomTemp = 0, optionPicker = FALSE, Xchecker = FALSE, Ychecker = FALSE;
@@ -120,7 +121,7 @@ void plumbus(Image *zoom)
 			scanf("%d", &tempY);
 			getchar();
 			// This if-statements is making sure I input valid inputs inside the picture.
-			if (tempX < zoom->width && tempY < zoom->height)
+			if (tempX < (int)zoom->width && tempY < (int)zoom->height)
 				validXY = TRUE;
 			else
 				printf("ERROR! Inputed X or Y is outside the picture\n");
@@ -148,19 +149,20 @@ void plumbus(Image *zoom)
 		for (int i = 1; i < 3; i++)
 		{
 			counter = i;
-			if (tempX + zoomOptionsX[counter-1][0] > zoom->width)
+			if (tempX + zoomOptionsX[counter-1][0] > (int)zoom->width)
 			{
-				while (tempX + zoomOptionsX[i-1][0] > zoom->width)
+				while (tempX + zoomOptionsX[i-1][0] > (int)zoom->width)
 				{
 					zoomOptionsX[i-1][0] = zoomOptionsX[counter][0];
 					counter++;
 				}
 			}
 		}
-		/* This for loop is making sure I always get the right proportions. If its a picture
-			 that is more wider I am giving my current options Y-value the next one since I
-			 get the values in descending order. Once I've checked the width I check the height
-			 there I change my X-value instead to keep my proportions.
+		/* 
+			This for loop is making sure I always get the right proportions. If its a picture
+			that is more wider I am giving my current options Y-value the next one since I
+			get the values in descending order. Once I've checked the width I check the height
+			there I change my X-value instead to keep my proportions.
 		*/
 		for (int i = 0; i < 2; i++)
 		{
@@ -207,9 +209,10 @@ void plumbus(Image *zoom)
 		getchar();
 	}
 
-	/* This section of this function is creating the matrix based on my picked values
-		 It then enlargens it to get back to my starting size. Therefore I need to find
-		 values that I am going to multiply with my chosen zoom option.
+	/* 
+		This section of this function is creating the matrix based on my picked values
+		It then enlargens it to get back to my starting size. Therefore I need to find
+		values that I am going to multiply with my chosen zoom option.
 	*/
 	
 	// Since I want to check both my X and Y vals I use a temp for both of them callsed 
@@ -222,12 +225,13 @@ void plumbus(Image *zoom)
 		{
 			Xenlarger++;
 
-			/* If it happens that I can't find any values to get back to the actual size
-				 I need to swap my values back to their originals. There is a posibility that
-				 I swapped these vals earlier in my code. I then set Xenlarger to 1 to restart
-				 my finder.
+			/* 
+				If it happens that I can't find any values to get back to the actual size
+				I need to swap my values back to their originals. There is a posibility that
+				I swapped these vals earlier in my code. I then set Xenlarger to 1 to restart
+				my finder.
 			*/
-			if (zoomTemp > zoom->width)
+			if (zoomTemp > (int)zoom->width)
 			{
 				temp = zoomOptionsY[zoomOption][0];
 				zoomOptionsY[zoomOption][0] = zoomOptionsX[zoomOption][0];
@@ -266,7 +270,7 @@ void plumbus(Image *zoom)
 		}
 	}
 
-	for (int i = 0; i < zoom->height; i++)
+	for (int i = 0; i < (int)zoom->height; i++)
 		free(zoom->pixels[i]);
 	free(zoom->pixels);
 
@@ -278,10 +282,10 @@ void plumbus(Image *zoom)
 	// This is resizing the matrix to get back to the starting size.
 	localMatrix = (Pixel**) malloc(sizeof(Pixel*) * zoom->height * Yenlarger);
 
-	for (int i = 0; i < zoom->height * Yenlarger; i++)
+	for (int i = 0; i < (int)zoom->height * Yenlarger; i++)
 	{
 		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * zoom->width * Xenlarger);
-		for (int j = 0; j < zoom->width * Xenlarger; j++)
+		for (int j = 0; j < (int)zoom->width * Xenlarger; j++)
 		{
 			localMatrix[i][j].r = zoom->pixels[i/Yenlarger][j/Xenlarger].r;
 			localMatrix[i][j].g = zoom->pixels[i/Yenlarger][j/Xenlarger].g;
@@ -289,7 +293,7 @@ void plumbus(Image *zoom)
 		}
 	}
 
-	for (int i = 0; i < zoom->height; i++)
+	for (int i = 0; i < (int)zoom->height; i++)
 		free(zoom->pixels[i]);
 	free(zoom->pixels);
 
@@ -335,12 +339,12 @@ void createExtension(char arr[])
 	}
 }
 
-void dildoSwaggins(Image swap)
+void picSwapper(Image swap)
 {
 	int temp;
-	for (int i = 0; i < swap.height; i++)
+	for (int i = 0; i < (int)swap.height; i++)
 	{
-		for (int j = 0; j < swap.width; j++)
+		for (int j = 0; j < (int)swap.width; j++)
 		{
 			temp = swap.pixels[i][j].g; // Storing the green value in a temp variable.
 			swap.pixels[i][j].g = swap.pixels[i][j].r; // Replacing green with red.
@@ -354,11 +358,11 @@ void dildoSwaggins(Image swap)
 	getchar();
 }
 
-void skankHunt(Image invert)
+void picInverter(Image invert)
 {
-	for (int i = 0; i < invert.height; i++)
+	for (int i = 0; i < (int)invert.height; i++)
 	{
-		for (int j = 0; j < invert.width; j++)
+		for (int j = 0; j < (int)invert.width; j++)
 		{
 			// To invert a color I just take the maximum RGB value and remove the current
 			// value from it.
@@ -373,21 +377,21 @@ void skankHunt(Image invert)
 	getchar();
 }
 
-void trumpster(Image *resize)
+void picRotation(Image *resize)
 {
 	int temp;
 
 	/*
-	 * I am creating a local matrix here where I want my rows to be the original width
-	 * and the columns my original height. By doing so I rotate my picture 90-degrees.
-	 * To get every color in its right spot I take the maximum value of each rgb value
-	 * and lower them with my current j and i.
+		I am creating a local matrix here where I want my rows to be the original width
+		and the columns my original height. By doing so I rotate my picture 90-degrees.
+		To get every color in its right spot I take the maximum value of each rgb value
+		and lower them with my current j and i.
 	*/
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * resize->width);
-	for (int i = 0; i < resize->width; i++)
+	for (int i = 0; i < (int)resize->width; i++)
 	{
 		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * resize->height);
-		for (int j = 0; j < resize->height; j++)
+		for (int j = 0; j < (int)resize->height; j++)
 		{
 			localMatrix[i][j].r = resize->pixels[(resize->height-1)-j][(resize->width-1)-i].r;
 			localMatrix[i][j].g = resize->pixels[(resize->height-1)-j][(resize->width-1)-i].g;
@@ -395,7 +399,7 @@ void trumpster(Image *resize)
 		}
 	}
 
-	for (int i = 0; i < resize->height; i++)
+	for (int i = 0; i < (int)resize->height; i++)
 		free(resize->pixels[i]);
 	free(resize->pixels);
 
@@ -410,7 +414,7 @@ void trumpster(Image *resize)
 	getchar();
 }
 
-void abradolfLincler(Image *resize)
+void picEnlarger(Image *resize)
 {
 	int tempEnlarger, checkEnlarger = FALSE;
 	while (!checkEnlarger) // I set the limit to enlarge a picture every instance to 15.
@@ -432,10 +436,10 @@ void abradolfLincler(Image *resize)
 		my tempEnlarger variabel.
 	*/
 	Pixel ** localMatrix = (Pixel**) malloc(sizeof(Pixel*) * (resize->height * tempEnlarger));
-	for (int i = 0; i < (resize->height * tempEnlarger); i++)
+	for (int i = 0; i < ((int)resize->height * tempEnlarger); i++)
 	{
 		localMatrix[i] = (Pixel*) malloc(sizeof(Pixel) * (resize->width * tempEnlarger));
-		for (int j = 0; j < (resize->width * tempEnlarger); j++)
+		for (int j = 0; j < ((int)resize->width * tempEnlarger); j++)
 		{
 			localMatrix[i][j].r = resize->pixels[i/tempEnlarger][j/tempEnlarger].r;
 			localMatrix[i][j].g = resize->pixels[i/tempEnlarger][j/tempEnlarger].g;
@@ -443,7 +447,7 @@ void abradolfLincler(Image *resize)
 		}
 	}
 	
-	for (int i = 0; i < resize->height; i++)
+	for (int i = 0; i < (int)resize->height; i++)
 		free(resize->pixels[i]);
 	free(resize->pixels);
 
